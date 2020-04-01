@@ -9,9 +9,11 @@ import (
 	"github.com/prodbox/weasn/official-account/oauth"
 	"github.com/prodbox/weasn/official-account/server"
 	"github.com/prodbox/weasn/official-account/template"
+	"github.com/prodbox/weasn/official-account/user"
 )
 
 type OfficialAccount interface {
+	User() *user.UserClient
 	Base() *base.Client
 	Media() *media.Client
 	OAuth() *oauth.Client

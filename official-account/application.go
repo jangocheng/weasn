@@ -8,6 +8,7 @@ import (
 	"github.com/prodbox/weasn/official-account/oauth"
 	"github.com/prodbox/weasn/official-account/server"
 	"github.com/prodbox/weasn/official-account/template"
+	"github.com/prodbox/weasn/official-account/user"
 )
 
 type Application struct {
@@ -59,6 +60,11 @@ func (this *Application) Media() *media.Client {
 // OAuth 网页授权
 func (this *Application) OAuth() *oauth.Client {
 	return oauth.New(this.opts)
+}
+
+// User 用户
+func (app *Application) User() *user.UserClient {
+	return user.NewUser(app.opts)
 }
 
 func (this *Application) AccessToken() context.AccessToken {
