@@ -5,6 +5,7 @@ import (
 	"github.com/prodbox/weasn/kernel/context"
 	"github.com/prodbox/weasn/official-account/base"
 	"github.com/prodbox/weasn/official-account/customer"
+	"github.com/prodbox/weasn/official-account/oauth"
 	"github.com/prodbox/weasn/official-account/server"
 	"github.com/prodbox/weasn/official-account/template"
 )
@@ -53,6 +54,11 @@ func (this *Application) Base() *base.Client {
 // Media 临时素材
 func (this *Application) Media() *media.Client {
 	return media.New(this.opts)
+}
+
+// OAuth 网页授权
+func (this *Application) OAuth() *oauth.Client {
+	return oauth.New(this.opts)
 }
 
 func (this *Application) AccessToken() context.AccessToken {
