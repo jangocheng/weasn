@@ -1,6 +1,8 @@
 package customer
 
-import "github.com/prodbox/weasn/kernel/message"
+import (
+	"github.com/prodbox/weasn/kernel/message"
+)
 
 type messenger struct {
 	to      string

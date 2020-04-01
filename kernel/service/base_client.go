@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/prodbox/weasn/kernel/context"
 	"github.com/prodbox/weasn/kernel/message"
@@ -45,13 +46,19 @@ func (this *BaseClient) request(method, endpoint string, resp message.JsonError,
 	}
 
 	// 请求微信
-	response, err := beforeFn(this.opts.HttpClient.R()).SetHeader("Accept", "application/json").SetQueryParams(params).Execute(method, endpoint)
+	response, err := beforeFn(this.opts.HttpClient.R()).SetQueryParams(params).Execute(method, endpoint)
 	if err != nil {
 		return err
 	}
 
 	if response.Header().Get("Content-Type") != "application/json" {
-		return json.Unmarshal(response.Body(), resp)
+		if err := json.Unmarshal(response.Body(), resp); err != nil {
+			return err
+		}
+	}
+
+	if resp.GetCode() != 0 {
+		return fmt.Errorf("errcode=%d , errmsg=%s", resp.GetCode(), resp.GetMsg())
 	}
 	return nil
 }
