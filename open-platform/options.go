@@ -1,11 +1,11 @@
-package official_account
+package open_platform
 
 import (
 	"github.com/go-resty/resty/v2"
 	"github.com/prodbox/weasn/kernel/cache"
 	"github.com/prodbox/weasn/kernel/context"
 	"github.com/prodbox/weasn/kernel/service"
-	"github.com/prodbox/weasn/official-account/auth"
+	"github.com/prodbox/weasn/open-platform/auth"
 	"time"
 )
 
@@ -38,7 +38,7 @@ func defaultEncrypter() context.Option {
 func defaultAccessToken() context.Option {
 	return func(o *context.Options) {
 		if o.AccessToken == nil {
-			o.AccessToken = service.NewAccessToken(auth.New(o.Clone()))
+			o.AccessToken = service.NewAccessToken(auth.New(auth.NewVerifyTicket(o.Clone())))
 		}
 	}
 }
