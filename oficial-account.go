@@ -7,6 +7,7 @@ import (
 	"github.com/prodbox/weasn/official-account/base"
 	"github.com/prodbox/weasn/official-account/customer"
 	"github.com/prodbox/weasn/official-account/server"
+	"github.com/prodbox/weasn/official-account/template"
 )
 
 type OfficialAccount interface {
@@ -14,6 +15,7 @@ type OfficialAccount interface {
 	Media() *media.Client
 	AccessToken() context.AccessToken
 	CustomerService() *customer.Client
+	TemplateMessage() *template.Client
 	Server(...server.Option) server.Server
 }
 

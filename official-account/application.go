@@ -6,6 +6,7 @@ import (
 	"github.com/prodbox/weasn/official-account/base"
 	"github.com/prodbox/weasn/official-account/customer"
 	"github.com/prodbox/weasn/official-account/server"
+	"github.com/prodbox/weasn/official-account/template"
 )
 
 type Application struct {
@@ -54,11 +55,16 @@ func (this *Application) Media() *media.Client {
 	return media.New(this.opts)
 }
 
+func (this *Application) AccessToken() context.AccessToken {
+	return this.opts.AccessToken
+}
+
 // CustomerService 客服
 func (this *Application) CustomerService() *customer.Client {
 	return customer.New(this.opts)
 }
 
-func (this *Application) AccessToken() context.AccessToken {
-	return this.opts.AccessToken
+// TemplateMessage 模板消息
+func (this *Application) TemplateMessage() *template.Client {
+	return template.New(this.opts)
 }
