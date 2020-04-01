@@ -101,5 +101,5 @@ func (this *Client) Messages(startTime, endTime, msgId, number int64) ([]MsgReco
 
 // send 发送客服消息
 func (this *Client) send(msg interface{}) error {
-	return this.baseClient.Post("customservice/msgrecord/getmsglist", msg, &message.JsonErrorMessage{})
+	return this.baseClient.Post("cgi-bin/message/custom/send", msg, &message.JsonErrorMessage{})
 }

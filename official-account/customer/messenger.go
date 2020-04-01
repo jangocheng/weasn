@@ -1,6 +1,8 @@
 package customer
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/prodbox/weasn/kernel/message"
 )
 
@@ -30,5 +32,8 @@ func (this *messenger) Send() error {
 	if len(this.account) > 0 {
 		message.KfAccount(this.account)
 	}
+
+	bytes, err := json.Marshal(message)
+	fmt.Println(string(bytes), err)
 	return this.client.send(message)
 }

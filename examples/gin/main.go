@@ -2,17 +2,21 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/prodbox/weasn"
 	"github.com/prodbox/weasn/kernel/message"
 	"github.com/prodbox/weasn/official-account/server"
 )
 
+var app weasn.OfficialAccount
+
 func main() {
-	app := weasn.NewOfficialAccount(
-		weasn.AppId("wx71d408cd3aa9db9c"),
-		weasn.Secret("9c918fe2434188a61ffaacc2f82d26d1"),
-		weasn.Token("weiphp"),
+
+	app = weasn.NewOfficialAccount(
+		weasn.AppId("wx67426c1793b21554"),
+		weasn.Secret("f2967a76bdcb9b9a4ec7d3c27794b384"),
+		weasn.Token("maimi"),
 		weasn.AESKey("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq"),
 	)
 
@@ -21,8 +25,8 @@ func main() {
 	}
 
 	engine := gin.New()
-	engine.GET("/wx/index", gin.WrapH(app.Server(serverOptions...)))
-	engine.POST("/wx/index", gin.WrapH(app.Server(serverOptions...)))
+	engine.GET("/mp/index", gin.WrapH(app.Server(serverOptions...)))
+	engine.POST("/mp/index", gin.WrapH(app.Server(serverOptions...)))
 	engine.Run(":8080")
 
 	// qcYI2lIk2w34FUVRWq7_MdKUSE1VQxEAk_ZyrXtKB91Nabc1S3CrnBe44z6M57h2
@@ -32,6 +36,10 @@ func main() {
 type messageHandler struct{}
 
 func (this *messageHandler) Text(mixed server.Mixed) message.Message {
+
+	fmt.Println("Text = > ", app.CustomerService().Message(message.NewText("我是客服消息一")).To(mixed.FromUserName).Send())
+	fmt.Println("Text = > ", app.CustomerService().Message(message.NewText("我是客服消息二")).To(mixed.FromUserName).Send())
+
 	return message.NewText("我是文本消息 - > " + mixed.Content)
 }
 
