@@ -94,6 +94,33 @@ func (this *messageHandler) Voice(msg server.Mixed) message.Message {
 
 ```
 
+### 模板消息
+```go
+officialAccount.TemplateMessage().Send(map[string]interface{}{
+			"touser":      mixed.FromUserName,
+			"template_id": "3yInRq35ahx-VswdudnNfwiM-ncYn2myFnZS9JfVbs8",
+			"data": map[string]interface{}{
+				"first": map[string]string{
+					"value": "恭喜中奖",
+					"color": "#173177",
+				},
+				"keyword1": map[string]string{
+					"value": "非洲一日游",
+					"color": "#173177",
+				},
+				"keyword2": map[string]string{
+					"value": "2017年9月8日",
+					"color": "#173177",
+				},
+				"remark": map[string]string{
+					"value": "请于3日内前往非洲",
+					"color": "#173177",
+				},
+			},
+		})
+
+```
+
 ## 微信开放平台
 
 ### 快速接入
