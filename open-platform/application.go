@@ -2,7 +2,9 @@ package open_platform
 
 import (
 	"github.com/prodbox/weasn/kernel/context"
+	"github.com/prodbox/weasn/official-account"
 	"github.com/prodbox/weasn/open-platform/auth"
+	"github.com/prodbox/weasn/open-platform/authorizer/official"
 	"github.com/prodbox/weasn/open-platform/base"
 	"github.com/prodbox/weasn/open-platform/server"
 )
@@ -52,5 +54,6 @@ func (this *Application) AccessToken() context.AccessToken {
 }
 
 // OfficialAccount 代公众号实现业务
-func (this *Application) OfficialAccount(appId, refreshToken string) {
+func (this *Application) OfficialAccount(appId, refreshToken string) *official_account.Application {
+	return official.New(this.opts, appId, refreshToken)
 }

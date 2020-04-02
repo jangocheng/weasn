@@ -25,3 +25,10 @@ func AESKey(v string) context.Option {
 		o.AESKey = v
 	}
 }
+
+// 加密/解密模块
+func Encryptor(e context.Encrypter) context.Option {
+	return func(o *context.Options) {
+		o.Encrypter = e
+	}
+}
