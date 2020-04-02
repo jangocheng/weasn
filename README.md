@@ -61,10 +61,10 @@ import (
 )
 
 openPlatform = weasn.NewOpenPlatform(
-    weasn.AppId("wx549977f7acef0153"),
-    weasn.Secret("d3f4fba7d61816a6e1f6414233bb46b6"),
-    weasn.Token("miguanjia"),
-    weasn.AESKey("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq"),
+    weasn.AppId("123456789"),
+    weasn.Secret("123456789"),
+    weasn.Token("123456789"),
+    weasn.AESKey("123456789"),
 )
 
 
