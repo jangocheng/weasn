@@ -16,3 +16,31 @@
 ```sh
 go get github.com/prodbox/weasn
 ```
+
+## 微信公众号
+
+```go
+import (
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/prodbox/weasn"
+	"github.com/prodbox/weasn/kernel/message"
+	"github.com/prodbox/weasn/official-account/server"
+)
+
+// 全局实例
+var app weasn.OfficialAccount
+
+// 初始化一个公众号实例
+app = weasn.NewOfficialAccount(
+    weasn.AppId("123456789"),
+    weasn.Secret("123456789"),
+    weasn.Token("123456789"),
+    weasn.AESKey("123456789"),
+)
+
+// gin接入
+r := gin.New()
+r.GET("/index", gin.WrapH(app.Server()))
+r.Run(":8080")
+```
