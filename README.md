@@ -47,6 +47,63 @@ r.GET("/index", gin.WrapH(officialAccount.Server()))
 
 ```
 
+### 事件处理
+```go
+
+import (
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/prodbox/weasn/kernel/message"
+)
+
+s := officialAccount.Server(
+    server.MessageHandler(&messageHandler{}),
+)
+
+r := gin.New()
+r.GET("/index", gin.WrapH(s))
+
+// 
+
+type messageHandler struct{}
+
+func (this *messageHandler) Text(mixed server.Mixed) message.Message {
+	return message.NewText("回复一条文本消息")
+}
+
+func (this *messageHandler) Image(mixed server.Mixed) message.Message {
+	// 发送一条客服消息
+	officialAccount.CustomerService().Message(message.NewText("我是客服消息")).To(mixed.FromUserName).Send()
+	// 不回复内容
+	return nil
+}
+
+func (this *messageHandler) Voice(msg server.Mixed) message.Message {
+	return message.NewText("文本消息")
+}
+
+func (this *messageHandler) Video(message server.Mixed) message.Message {
+	return nil
+}
+
+func (this *messageHandler) ShortVideo(message server.Mixed) message.Message {
+	return nil
+}
+
+func (this *messageHandler) Location(message server.Mixed) message.Message {
+	return nil
+}
+
+func (this *messageHandler) Link(message server.Mixed) message.Message {
+	return nil
+}
+
+func (this *messageHandler) Event(message server.Mixed) message.Message {
+	return nil
+}
+
+```
+
 ## 微信开放平台
 
 ### 快速接入
