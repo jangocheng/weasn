@@ -74,7 +74,7 @@ s := app.Server().ComponentVerifyTicket(func(mixed server.Mixed) {
   	fmt.Println("推送授权通知")
 })
 r := gin.New()
-r.GET("/index", gin.WrapH(officialAccount.openPlatform()))
+r.GET("/index", gin.WrapH(s))
 
 	
 ```
