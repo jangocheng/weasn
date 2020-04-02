@@ -3,7 +3,6 @@ package internal
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -81,7 +80,6 @@ func (f *FileCacher) Delete(key string) error {
 }
 
 func (f *FileCacher) IsExist(key string) bool {
-	fmt.Println(f.filepath(key))
 	_, err := os.Stat(f.filepath(key))
 	return err == nil || os.IsExist(err)
 }

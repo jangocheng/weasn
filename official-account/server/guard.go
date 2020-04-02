@@ -73,12 +73,12 @@ func (s *guard) ShouldReturnRawResponse(r *http.Request) []byte {
 	return nil
 }
 
-func (this *guard) eventHandler(handler IEvent) {
+func (this *guard) onEventHandler(handler IEvent) {
 	this.handle(EventSubscribe, handler.Subscribe)
 	this.handle(EventUnsubscribe, handler.Unsubscribe)
 }
 
-func (this *guard) messageHandler(handler IMessage) {
+func (this *guard) onMessageHandler(handler IMessage) {
 	this.handle(MsgTypeText, handler.Text)
 	this.handle(MsgTypeImage, handler.Image)
 	this.handle(MsgTypeVoice, handler.Voice)

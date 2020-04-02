@@ -22,6 +22,13 @@ func New(pool *context.Pool, ticket *auth.VerifyTicket) *guard {
 	return &guard{VerifyTicket: ticket, pool: pool}
 }
 
+func (this *guard) InitOptions(opts ...Option) *guard {
+	for _, o := range opts {
+		o(this)
+	}
+	return this
+}
+
 // ServeHTTP 服务端入口
 func (this *guard) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := this.pool.Acquire(w, r)
@@ -45,7 +52,7 @@ func (this *guard) Dispatch(payload []byte) interface{} {
 	if mixed.InfoType == EVENT_COMPONENT_VERIFY_TICKET {
 		this.SetTicket(mixed.ComponentVerifyTicket)
 	}
-
+	log.Println("Dispatch ======= >")
 	// 调用监听事件
 	this.Observable.Dispatch(mixed.InfoType, mixed)
 	return nil
@@ -79,6 +86,14 @@ func (this *guard) ComponentVerifyTicket(h HandlerFunc) Server {
 // NotifyThirdFasteregister 快速创建小程序的信息
 func (this *guard) NotifyThirdFasteregister(h HandlerFunc) Server {
 	return this.handle("notify_third_fasteregister", h)
+}
+
+func (this *guard) onHandler(h IHandler) {
+	this.Authorized(h.Authorized)
+	this.UnAuthorized(h.UnAuthorized)
+	this.UpdateAuthorized(h.UpdateAuthorized)
+	this.ComponentVerifyTicket(h.ComponentVerifyTicket)
+	this.NotifyThirdFasteregister(h.NotifyThirdFasteregister)
 }
 
 // 添加监听事件

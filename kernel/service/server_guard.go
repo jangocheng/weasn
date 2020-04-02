@@ -36,7 +36,7 @@ func (this *ServerGuard) Serve() error {
 	var err error
 
 	// 请求校验
-	if this.validate() == false {
+	if ok := this.validate(); ok == false {
 		return errors.New("请求校验失败")
 	}
 
@@ -45,8 +45,8 @@ func (this *ServerGuard) Serve() error {
 		return nil
 	}
 
-	// 获取消息
-	if payload, err = this.GetMessage(); err != nil {
+	// 接收数据
+	if payload, err = this.GetMessage(); err != nil || len(payload) == 0 {
 		return err
 	}
 
@@ -121,7 +121,6 @@ func (this *ServerGuard) GetMessage() ([]byte, error) {
 	if rawBytes, err = this.Options().Encrypter.Decrypt(content.Encrypt, this.Query("msg_signature"), this.Query("timestamp"), this.Query("nonce")); err != nil {
 		return nil, fmt.Errorf("消息解密失败, err=%v", err)
 	}
-
 	return rawBytes, nil
 }
 

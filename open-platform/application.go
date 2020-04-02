@@ -2,17 +2,23 @@ package open_platform
 
 import (
 	"github.com/prodbox/weasn/kernel/context"
-	"github.com/prodbox/weasn/official-account/server"
+	"github.com/prodbox/weasn/open-platform/auth"
+	"github.com/prodbox/weasn/open-platform/base"
+	"github.com/prodbox/weasn/open-platform/server"
 )
 
 type Application struct {
+	*base.Client
 	opts context.Options
 	pool *context.Pool
 }
 
 func New(opts ...context.Option) *Application {
+	options := context.NewOptions(opts...).InitOptions(defaultOptions())
+
 	app := &Application{
-		opts: context.NewOptions(opts...).InitOptions(defaultOptions()),
+		Client: base.New(options),
+		opts:   options,
 	}
 
 	app.pool = context.New(func() context.Context {
@@ -37,10 +43,14 @@ func (this *Application) allocateContext() context.Context {
 }
 
 // Server 服务端
-func (app *Application) Server(opts ...server.Option) server.Server {
-	return server.New(app.pool).InitOptions(opts...)
+func (this *Application) Server(opts ...server.Option) server.Server {
+	return server.New(this.pool, auth.NewVerifyTicket(this.opts)).InitOptions(opts...)
 }
 
 func (this *Application) AccessToken() context.AccessToken {
 	return this.opts.AccessToken
+}
+
+// OfficialAccount 代公众号实现业务
+func (this *Application) OfficialAccount(appId, refreshToken string) {
 }

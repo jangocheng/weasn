@@ -1,30 +1,36 @@
 package auth
 
-func New(ticket *VerifyTicket) *AccessToken {
-	return &AccessToken{VerifyTicket: ticket}
-}
+import "github.com/prodbox/weasn/kernel/context"
 
-type AccessToken struct {
+type auth struct {
 	*VerifyTicket
 }
 
-func (this *AccessToken) TokenKey() string {
+func New(ticket *VerifyTicket) *auth {
+	return &auth{VerifyTicket: ticket}
+}
+
+func (this *auth) Options() context.Options {
+	return this.opts
+}
+
+func (this *auth) TokenKey() string {
 	return "component_access_token"
 }
 
-func (this *AccessToken) QueryName() string {
+func (this *auth) QueryName() string {
 	return this.TokenKey()
 }
 
-func (this *AccessToken) Method() string {
+func (this *auth) Method() string {
 	return "POST"
 }
 
-func (this *AccessToken) Endpoint() string {
+func (this *auth) Endpoint() string {
 	return "cgi-bin/component/api_component_token"
 }
 
-func (this *AccessToken) Credentials() map[string]string {
+func (this *auth) Credentials() map[string]string {
 	return map[string]string{
 		"component_appid":         this.opts.AppId,
 		"component_appsecret":     this.opts.Secret,
