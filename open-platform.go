@@ -8,6 +8,7 @@ import (
 	"github.com/prodbox/weasn/open-platform/server"
 )
 
+// 微信开放平台
 type OpenPlatform interface {
 	// 获取用户授权页 URL
 	GetPreAuthorizationUrl(redirectUri string) (string, error)
