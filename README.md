@@ -19,6 +19,8 @@ go get github.com/prodbox/weasn
 
 ## 微信公众号
 
+### 快速接入
+
 ```go
 import (
 	"fmt"
@@ -28,11 +30,11 @@ import (
 	"github.com/prodbox/weasn/official-account/server"
 )
 
-// 全局实例
-var app weasn.OfficialAccount
+// 微信公众号实例
+var officialAccount weasn.OfficialAccount
 
-// 初始化一个公众号实例
-app = weasn.NewOfficialAccount(
+// 初始化公众号实例
+officialAccount = weasn.NewOfficialAccount(
     weasn.AppId("123456789"),
     weasn.Secret("123456789"),
     weasn.Token("123456789"),
@@ -41,6 +43,38 @@ app = weasn.NewOfficialAccount(
 
 // gin接入
 r := gin.New()
-r.GET("/index", gin.WrapH(app.Server()))
-r.Run(":8080")
+r.GET("/index", gin.WrapH(officialAccount.Server()))
+
+```
+
+## 微信开放平台
+
+### 快速接入
+```go
+var openPlatform weasn.OpenPlatform
+
+import (
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/prodbox/weasn"
+	"github.com/prodbox/weasn/open-platform/server"
+)
+
+openPlatform = weasn.NewOpenPlatform(
+    weasn.AppId("wx549977f7acef0153"),
+    weasn.Secret("d3f4fba7d61816a6e1f6414233bb46b6"),
+    weasn.Token("miguanjia"),
+    weasn.AESKey("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq"),
+)
+
+
+s := app.Server().ComponentVerifyTicket(func(mixed server.Mixed) {
+    fmt.Println("推送component_verify_ticket")
+}).Authorized(func(mixed server.Mixed) {
+  	fmt.Println("推送授权通知")
+})
+r := gin.New()
+r.GET("/index", gin.WrapH(officialAccount.openPlatform()))
+
+	
 ```
