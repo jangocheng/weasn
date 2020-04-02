@@ -41,7 +41,7 @@ officialAccount = weasn.NewOfficialAccount(
     weasn.AESKey("123456789"),
 )
 
-// gin接入
+// 配合gin
 r := gin.New()
 r.GET("/index", gin.WrapH(officialAccount.Server()))
 
@@ -51,6 +51,8 @@ r.GET("/index", gin.WrapH(officialAccount.Server()))
 
 ### 快速接入
 ```go
+
+// 微信开放平台实例
 var openPlatform weasn.OpenPlatform
 
 import (
@@ -60,6 +62,7 @@ import (
 	"github.com/prodbox/weasn/open-platform/server"
 )
 
+// 初始化开放平台实例
 openPlatform = weasn.NewOpenPlatform(
     weasn.AppId("123456789"),
     weasn.Secret("123456789"),
@@ -67,14 +70,15 @@ openPlatform = weasn.NewOpenPlatform(
     weasn.AESKey("123456789"),
 )
 
-
+// 添加监听事件
 s := app.Server().ComponentVerifyTicket(func(mixed server.Mixed) {
     fmt.Println("推送component_verify_ticket")
 }).Authorized(func(mixed server.Mixed) {
   	fmt.Println("推送授权通知")
 })
+
+// 配合gin
 r := gin.New()
 r.GET("/index", gin.WrapH(s))
 
-	
 ```
