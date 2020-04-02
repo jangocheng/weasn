@@ -56,14 +56,23 @@ import (
 	"github.com/prodbox/weasn/kernel/message"
 )
 
+//
 s := officialAccount.Server(
     server.MessageHandler(&messageHandler{}),
 )
 
-r := gin.New()
-r.GET("/index", gin.WrapH(s))
-
-// 
+/*
+type IMessage interface {
+	Text(Mixed) message.Message
+	Image(Mixed) message.Message
+	Voice(Mixed) message.Message
+	Video(Mixed) message.Message
+	Link(Mixed) message.Message
+	Event(Mixed) message.Message
+	ShortVideo(Mixed) message.Message
+	Location(Mixed) message.Message
+}
+*/
 
 type messageHandler struct{}
 
@@ -81,26 +90,7 @@ func (this *messageHandler) Image(mixed server.Mixed) message.Message {
 func (this *messageHandler) Voice(msg server.Mixed) message.Message {
 	return message.NewText("文本消息")
 }
-
-func (this *messageHandler) Video(message server.Mixed) message.Message {
-	return nil
-}
-
-func (this *messageHandler) ShortVideo(message server.Mixed) message.Message {
-	return nil
-}
-
-func (this *messageHandler) Location(message server.Mixed) message.Message {
-	return nil
-}
-
-func (this *messageHandler) Link(message server.Mixed) message.Message {
-	return nil
-}
-
-func (this *messageHandler) Event(message server.Mixed) message.Message {
-	return nil
-}
+...
 
 ```
 
