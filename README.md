@@ -1,4 +1,7 @@
 # WeASN-阿萨辛
+
+[![golang](https://img.shields.io/badge/Language-Go-green.svg?style=flat)](https://golang.org)
+
 微信开发SDK For Golang（公众号、小程序、微信支付、开放平台）仓库代码测试上传中!
 
 | 目录 | 对应          | 功能                                                |
