@@ -39,6 +39,7 @@ officialAccount = weasn.NewOfficialAccount(
     weasn.Secret("123456789"),
     weasn.Token("123456789"),
     weasn.AESKey("123456789"),
+    weasn.Cache(&customCache{}),      // 可选
 )
 
 // 配合gin
