@@ -2,7 +2,6 @@ package internal
 
 import (
 	"encoding/xml"
-	"fmt"
 )
 
 type CDATA string
@@ -30,7 +29,6 @@ func (this *CustomerMessage) To(to string) {
 
 func (this *CustomerMessage) KfAccount(kfAccount string) {
 	this.CustomService = &CustomService{KfAccount: kfAccount}
-	fmt.Println(this.CustomService)
 }
 
 /******* 服务端响应消息 ********/

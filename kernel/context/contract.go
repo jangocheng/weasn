@@ -1,6 +1,8 @@
 package context
 
-import "net/http"
+import (
+	"net/http"
+)
 
 type Context interface {
 	Options() Options
@@ -10,8 +12,8 @@ type Context interface {
 	Query(key string) string
 	Set(key string, value interface{})
 	Get(key string) (value interface{}, exists bool)
-	XML(code int, obj interface{})
-	String(code int, format string, values ...interface{})
+	XML(code int, obj interface{}) error
+	String(code int, format string, values ...interface{}) error
 }
 
 type AccessToken interface {

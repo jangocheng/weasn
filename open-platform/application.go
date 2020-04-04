@@ -59,7 +59,5 @@ func (this *Application) AccessToken() context.AccessToken {
 
 // OfficialAccount 代公众号实现业务
 func (this *Application) OfficialAccount(appId, refreshToken string) *official_account.Application {
-	return this.Singleton("official_account", func() interface{} {
-		return official.New(this.opts, appId, refreshToken)
-	}).(*official_account.Application)
+	return official.New(this.opts, appId, refreshToken)
 }

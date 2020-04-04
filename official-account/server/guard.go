@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/xml"
 	"fmt"
+	"log"
 	"net/http"
 	"reflect"
 	"time"
@@ -28,6 +29,7 @@ func (this *guard) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer this.pool.Release(ctx)
 
 	if err := service.NewServerGuard(this, ctx).Serve(); err != nil {
+		log.Println("ServeHTTP =>", err)
 		// 此处可以写日志
 	}
 }

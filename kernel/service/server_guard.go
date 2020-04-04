@@ -5,13 +5,14 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"github.com/prodbox/weasn/kernel/context"
 	"io/ioutil"
 	"net/http"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/prodbox/weasn/kernel/context"
 )
 
 // 服务端接口
@@ -35,14 +36,16 @@ func (this *ServerGuard) Serve() error {
 	var payload []byte
 	var err error
 
+	timer := time.NewTimer(4 * time.Second)
+	defer timer.Stop()
+
 	// 请求校验
 	if ok := this.validate(); ok == false {
 		return errors.New("请求校验失败")
 	}
 
 	if rawbytes := this.ShouldReturnRawResponse(this.Request()); rawbytes != nil {
-		this.String(http.StatusOK, string(rawbytes))
-		return nil
+		return this.String(http.StatusOK, string(rawbytes))
 	}
 
 	// 接收数据
@@ -50,18 +53,32 @@ func (this *ServerGuard) Serve() error {
 		return err
 	}
 
-	if response := this.Dispatch(payload); response != nil {
-		this.XML(http.StatusOK, this.buildResponse(response))
+	ch := make(chan struct{}, 1)
+	go func() {
+		if response := this.Dispatch(payload); response != nil {
+			this.XML(http.StatusOK, this.buildResponse(response))
+		}
+		ch <- struct{}{}
+	}()
+
+	select {
+	case <-ch:
+		return nil
+	case <-timer.C:
 	}
-	return nil
+	return this.String(http.StatusOK, "")
 }
 
 func (this *ServerGuard) buildResponse(response interface{}) interface{} {
 	var encrypted []byte
 	var err error
 
-	if encrypted, err = xml.Marshal(response); err == nil || this.IsSafeMode() == false {
+	if this.IsSafeMode() == false {
 		return response
+	}
+
+	if encrypted, err = xml.Marshal(response); err != nil {
+		return nil
 	}
 
 	// 安全模式加密消息
