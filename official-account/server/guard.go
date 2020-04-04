@@ -3,8 +3,8 @@ package server
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/prodbox/weasn/kernel/context"
@@ -28,7 +28,6 @@ func (this *guard) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer this.pool.Release(ctx)
 
 	if err := service.NewServerGuard(this, ctx).Serve(); err != nil {
-		log.Println(err)
 		// 此处可以写日志
 	}
 }
@@ -44,7 +43,6 @@ func (this *guard) InitOptions(opts ...Option) *guard {
 func (this *guard) Dispatch(payload []byte) interface{} {
 	var mixed Mixed
 	if err := xml.Unmarshal(payload, &mixed); err != nil {
-		log.Println(err)
 		return nil
 	}
 
@@ -67,26 +65,25 @@ func (this *guard) Dispatch(payload []byte) interface{} {
 
 func (s *guard) ShouldReturnRawResponse(r *http.Request) []byte {
 	if raw := r.URL.Query().Get("echostr"); len(raw) > 0 {
-		fmt.Println(raw)
 		return []byte(raw)
 	}
 	return nil
 }
 
-func (this *guard) onEventHandler(handler IEvent) {
-	this.handle(EventSubscribe, handler.Subscribe)
-	this.handle(EventUnsubscribe, handler.Unsubscribe)
-}
+func (this *guard) bindObject(object interface{}) {
+	var prefix string
+	if _, ok := object.(IEventObject); ok == true {
+		prefix = "E_"
+	}
 
-func (this *guard) onMessageHandler(handler IMessage) {
-	this.handle(MsgTypeText, handler.Text)
-	this.handle(MsgTypeImage, handler.Image)
-	this.handle(MsgTypeVoice, handler.Voice)
-	this.handle(MsgTypeVideo, handler.Video)
-	this.handle(MsgTypeLink, handler.Link)
-	this.handle(MsgTypeEvent, handler.Event)
-	this.handle(MsgTypeLocation, handler.Location)
-	this.handle(MsgTypeShortVideo, handler.ShortVideo)
+	v := reflect.ValueOf(object)
+	t := v.Type()
+	for i := 0; i < v.NumMethod(); i++ {
+		itemFunc := v.Method(i).Interface().(func(Mixed) message.Message)
+		if v, ok := objectMapper[fmt.Sprintf("%s%s", prefix, t.Method(i).Name)]; ok {
+			this.handle(v, itemFunc)
+		}
+	}
 }
 
 func (this *guard) handle(condition string, h HandlerFunc) Server {

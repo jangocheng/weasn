@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/prodbox/weasn/kernel/context"
-	"net/http"
 )
 
 type accessToken struct {
@@ -79,13 +78,9 @@ func (this *accessToken) GetTokenParams() (map[string]string, error) {
 }
 
 func (this *accessToken) request() (map[string]interface{}, error) {
-	r := this.Options().HttpClient.R()
-	if this.Method() == http.MethodGet {
-		r.SetQueryParams(this.Credentials())
-	} else {
-		r.SetBody(this.Credentials())
-	}
-	response, err := r.SetBody(this.Credentials()).Execute(this.Method(), this.Endpoint())
+	credentials := this.Credentials()
+
+	response, err := this.Options().HttpClient.R().SetQueryParams(credentials).SetBody(credentials).Execute(this.Method(), this.Endpoint())
 	if err != nil {
 		return nil, err
 	}

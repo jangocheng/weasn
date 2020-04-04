@@ -12,7 +12,6 @@ type Options struct {
 	Secret string
 	Token  string
 	AESKey string
-
 	// 全局缓存组件
 	Cache cache.Cache
 	// 网络请求
@@ -46,5 +45,43 @@ func (o Options) Clone() Options {
 		Encrypter:   o.Encrypter,
 		HttpClient:  o.HttpClient,
 		AccessToken: o.AccessToken,
+	}
+}
+
+func AppId(v string) Option {
+	return func(o *Options) {
+		o.AppId = v
+	}
+}
+
+func Secret(v string) Option {
+	return func(o *Options) {
+		o.Secret = v
+	}
+}
+
+func Token(v string) Option {
+	return func(o *Options) {
+		o.Token = v
+	}
+}
+
+func AESKey(v string) Option {
+	return func(o *Options) {
+		o.AESKey = v
+	}
+}
+
+// 加密/解密模块
+func WithEncrypter(e Encrypter) Option {
+	return func(o *Options) {
+		o.Encrypter = e
+	}
+}
+
+// 加密/解密模块
+func WithAccessToken(token AccessToken) Option {
+	return func(o *Options) {
+		o.AccessToken = token
 	}
 }

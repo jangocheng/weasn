@@ -2,14 +2,13 @@ package server
 
 import (
 	"encoding/xml"
-	"log"
-	"net/http"
-
 	"github.com/prodbox/weasn/kernel/context"
 	"github.com/prodbox/weasn/kernel/message"
 	"github.com/prodbox/weasn/kernel/service"
 	"github.com/prodbox/weasn/kernel/trait"
 	"github.com/prodbox/weasn/open-platform/auth"
+	"net/http"
+	"reflect"
 )
 
 type guard struct {
@@ -35,7 +34,6 @@ func (this *guard) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer this.pool.Release(ctx)
 
 	if err := service.NewServerGuard(this, ctx).Serve(); err != nil {
-		log.Println(err)
 		// 此处可以写日志
 	}
 }
@@ -44,7 +42,6 @@ func (this *guard) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (this *guard) Dispatch(payload []byte) interface{} {
 	var mixed Mixed
 	if err := xml.Unmarshal(payload, &mixed); err != nil {
-		log.Println(err)
 		return nil
 	}
 
@@ -52,7 +49,7 @@ func (this *guard) Dispatch(payload []byte) interface{} {
 	if mixed.InfoType == EVENT_COMPONENT_VERIFY_TICKET {
 		this.SetTicket(mixed.ComponentVerifyTicket)
 	}
-	log.Println("Dispatch ======= >")
+
 	// 调用监听事件
 	this.Observable.Dispatch(mixed.InfoType, mixed)
 	return nil
@@ -64,39 +61,38 @@ func (this *guard) ShouldReturnRawResponse(r *http.Request) []byte {
 }
 
 // Authorized 处理授权成功事件
-func (this *guard) Authorized(h HandlerFunc) Server {
-	return this.handle(EVENT_AUTHORIZED, h)
+func (this *guard) Authorized(fn HandlerFunc) Server {
+	return this.handle(EVENT_AUTHORIZED, fn)
 }
 
-// UnAuthorized 处理授权取消事件
-func (this *guard) UnAuthorized(h HandlerFunc) Server {
-	return this.handle(EVENT_UNAUTHORIZED, h)
+func (this *guard) UnAuthorized(fn HandlerFunc) Server {
+	return this.handle(EVENT_UNAUTHORIZED, fn)
 }
 
-// UpdateAuthorized 处理授权更新事件
-func (this *guard) UpdateAuthorized(h HandlerFunc) Server {
-	return this.handle(EVENT_UPDATE_AUTHORIZED, h)
+func (this *guard) UpdateAuthorized(fn HandlerFunc) Server {
+	return this.handle(EVENT_UPDATE_AUTHORIZED, fn)
 }
 
-// VerifyTicket 处理微信10分钟推送一次的 component_verify_ticket
-func (this *guard) ComponentVerifyTicket(h HandlerFunc) Server {
-	return this.handle(EVENT_COMPONENT_VERIFY_TICKET, h)
+func (this *guard) ComponentVerifyTicket(fn HandlerFunc) Server {
+	return this.handle(EVENT_COMPONENT_VERIFY_TICKET, fn)
 }
 
-// NotifyThirdFasteregister 快速创建小程序的信息
-func (this *guard) NotifyThirdFasteregister(h HandlerFunc) Server {
-	return this.handle("notify_third_fasteregister", h)
+func (this *guard) NotifyThirdFasteregister(fn HandlerFunc) Server {
+	return this.handle(EVENT_NOTIFY_THIRD_FASTEREGISTER, fn)
 }
 
-func (this *guard) onHandler(h IHandler) {
-	this.Authorized(h.Authorized)
-	this.UnAuthorized(h.UnAuthorized)
-	this.UpdateAuthorized(h.UpdateAuthorized)
-	this.ComponentVerifyTicket(h.ComponentVerifyTicket)
-	this.NotifyThirdFasteregister(h.NotifyThirdFasteregister)
+func (this *guard) bindObject(object interface{}) {
+	v := reflect.ValueOf(object)
+	t := v.Type()
+
+	for i := 0; i < v.NumMethod(); i++ {
+		itemFunc := v.Method(i).Interface().(HandlerFunc)
+		if v, ok := objectMapper[t.Method(i).Name]; ok {
+			this.handle(v, itemFunc)
+		}
+	}
 }
 
-// 添加监听事件
 func (this *guard) handle(condition string, h HandlerFunc) Server {
 	this.On(condition, func(payload interface{}) message.Message {
 		h(payload.(Mixed))

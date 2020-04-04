@@ -14,6 +14,8 @@ const (
 
 	// 处理微信10分钟推送一次component_verify_ticket
 	EVENT_COMPONENT_VERIFY_TICKET = "component_verify_ticket"
+
+	EVENT_NOTIFY_THIRD_FASTEREGISTER = "notify_third_fasteregister"
 )
 
 // Mixed 微信每隔10分钟发过来一个数据ticket|授权成功通知|取消授权通知|授权更新通知
@@ -27,4 +29,13 @@ type Mixed struct {
 	AuthorizationCode            string   `xml:"AuthorizationCode"`            //授权码
 	AuthorizationCodeExpiredTime string   `xml:"AuthorizationCodeExpiredTime"` //过期时间
 	PreAuthCode                  string   `xml:"PreAuthCode"`                  //预授权码
+}
+
+// 函数映射
+var objectMapper = map[string]string{
+	"Authorized":               EVENT_AUTHORIZED,
+	"UnAuthorized":             EVENT_UNAUTHORIZED,
+	"UpdateAuthorized":         EVENT_UPDATE_AUTHORIZED,
+	"ComponentVerifyTicket":    EVENT_COMPONENT_VERIFY_TICKET,
+	"NotifyThirdFasteregister": EVENT_NOTIFY_THIRD_FASTEREGISTER,
 }

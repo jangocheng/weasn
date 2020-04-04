@@ -29,13 +29,6 @@ func AESKey(v string) context.Option {
 	}
 }
 
-// 加密/解密模块
-func Encryptor(e context.Encrypter) context.Option {
-	return func(o *context.Options) {
-		o.Encrypter = e
-	}
-}
-
 // 自定义缓存
 func Cache(c cache.Cache) context.Option {
 	return func(o *context.Options) {

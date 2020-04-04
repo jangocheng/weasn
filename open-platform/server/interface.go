@@ -5,8 +5,8 @@ import "net/http"
 // HandlerFunc 处理函数
 type HandlerFunc func(mixed Mixed)
 
-// Handler 消息监听接口
-type IHandler interface {
+// IEventObject 消息监听接口
+type IEventObject interface {
 	Authorized(mixed Mixed)
 	UnAuthorized(mixed Mixed)
 	UpdateAuthorized(mixed Mixed)

@@ -2,16 +2,16 @@ package server
 
 type Option func(*guard)
 
-// EventHandler 事件处理
-func EventHandler(handler IEvent) Option {
+// BindEventObject
+func BindEventObject(object IEventObject) Option {
 	return func(guard *guard) {
-		guard.onEventHandler(handler)
+		guard.bindObject(object)
 	}
 }
 
-// MessageHandler 消息处理
-func MessageHandler(handler IMessage) Option {
+// BindMessageObject
+func BindMessageObject(object IMessageObject) Option {
 	return func(guard *guard) {
-		guard.onMessageHandler(handler)
+		guard.bindObject(object)
 	}
 }

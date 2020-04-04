@@ -32,3 +32,31 @@ const (
 	EventTemplateSendJobFinish = "TEMPLATESENDJOBFINISH" // EventTemplateSendJobFinish = "TEMPLATESENDJOBFINISH"/
 
 )
+
+// 函数映射
+var objectMapper = map[string]string{
+	"Text":                    MsgTypeText,
+	"Image":                   MsgTypeImage,
+	"Voice":                   MsgTypeVoice,
+	"Video":                   MsgTypeVideo,
+	"Music":                   MsgTypeMusic,
+	"News":                    MsgTypeNews,
+	"Link":                    MsgTypeLink,
+	"Event":                   MsgTypeEvent,
+	"Transfer":                MsgTypeTransfer,
+	"ShortVideo":              MsgTypeShortVideo,
+	"Location":                MsgTypeLocation,
+	"E_Scan":                  EventScan,
+	"E_Click":                 EventClick,
+	"E_View":                  EventView,
+	"E_Location":              EventLocation,
+	"E_Subscribe":             EventSubscribe,
+	"E_Unsubscribe":           EventUnsubscribe,
+	"E_ScancodePush":          EventScancodePush,
+	"E_ScancodeWaitmsg":       EventScancodeWaitmsg,
+	"E_PicSysphoto":           EventPicSysphoto,
+	"E_PicPhotoOrAlbum":       EventPicPhotoOrAlbum,
+	"E_PicWeixin":             EventPicWeixin,
+	"E_LocationSelect":        EventLocationSelect,
+	"E_TemplateSendJobFinish": EventTemplateSendJobFinish,
+}

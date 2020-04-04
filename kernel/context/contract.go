@@ -4,25 +4,14 @@ import "net/http"
 
 type Context interface {
 	Options() Options
-
 	Writer() http.ResponseWriter
 	Request() *http.Request
 	Reset(http.ResponseWriter, *http.Request)
-
 	Query(key string) string
-
 	Set(key string, value interface{})
 	Get(key string) (value interface{}, exists bool)
 	XML(code int, obj interface{})
 	String(code int, format string, values ...interface{})
-}
-
-// 微信消息加密器
-type Encrypter interface {
-	// 加密
-	Encrypt(content []byte) ([]byte, error)
-	// 解密
-	Decrypt(content, msgSignature, timestamp, nonce string) ([]byte, error)
 }
 
 type AccessToken interface {
@@ -49,4 +38,12 @@ type IAuthObject interface {
 	Endpoint() string
 	// Credentials 请求参数
 	Credentials() map[string]string
+}
+
+// 微信消息加密器
+type Encrypter interface {
+	// 加密
+	Encrypt(content []byte) ([]byte, error)
+	// 解密
+	Decrypt(content, msgSignature, timestamp, nonce string) ([]byte, error)
 }

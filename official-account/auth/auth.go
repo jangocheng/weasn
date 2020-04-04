@@ -23,7 +23,7 @@ func (this *auth) QueryName() string {
 }
 
 func (this *auth) Method() string {
-	return "POST"
+	return "GET"
 }
 
 func (this *auth) Endpoint() string {

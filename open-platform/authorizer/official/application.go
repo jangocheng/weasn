@@ -9,9 +9,9 @@ import (
 
 func New(opts context.Options, authorizerAppId, refreshToken string) *official_account.Application {
 	return official_account.New(
-		official_account.AppId(authorizerAppId),
-		official_account.Token(opts.Token),
-		official_account.AccessToken(service.NewAccessToken(auth.New(opts, authorizerAppId, refreshToken))),
-		official_account.Encryptor(opts.Encrypter),
+		context.AppId(authorizerAppId),
+		context.Token(opts.Token),
+		context.WithAccessToken(service.NewAccessToken(auth.New(opts, authorizerAppId, refreshToken))),
+		context.WithEncrypter(opts.Encrypter),
 	)
 }

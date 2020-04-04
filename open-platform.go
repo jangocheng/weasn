@@ -20,10 +20,11 @@ type OpenPlatform interface {
 	GetAuthorizerOption(authorizerAppId, name string) (*base.GetAuthorizerOption, error)
 	// 获取已授权的授权方列表
 	GetAuthorizers(offset, count int) (*base.AuthorizerList, error)
-	// 代公众号实现业务
+	// 代公众号实现业务(单例)
 	OfficialAccount(appId, refreshToken string) *official_account.Application
-	// 服务端
+	// 服务端(单例)
 	Server(opts ...server.Option) server.Server
+	// AccessToken(单例)
 	AccessToken() context.AccessToken
 }
 
